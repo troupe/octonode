@@ -68,9 +68,9 @@ class Client
     if pageOrQuery? and typeof pageOrQuery == 'object'
       query = pageOrQuery
     else
-      query =
-        page: pageOrQuery if pageOrQuery?
-        per_page: per_page if per_page?
+      query = {}
+      query.page     = pageOrQuery if pageOrQuery?
+      query.per_page = per_page if per_page?
     if typeof @token == 'string'
       query.access_token = @token
     else if typeof @token == 'object' and @token.id
@@ -114,7 +114,9 @@ class Client
       followRedirect: false
       headers:
         'User-Agent': 'octonode/0.3 (https://github.com/pksunkara/octonode) terminal/0.0'
-    , @handleResponse(callback)
+    , (err, res, body) =>
+      return callback(err) if err
+      @errorHandle res, body, callback
 
   # Github api POST request
   post: (path, content, callback) ->
