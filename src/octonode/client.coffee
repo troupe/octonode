@@ -25,8 +25,8 @@ class HttpError extends Error
 
 # Initiate class
 class Client
+
   constructor: (@token) ->
-    @middlewares = []
 
   # Get authenticated user instance for client
   me: ->
@@ -84,29 +84,16 @@ class Client
       pathname: path
       query: query
 
-  handleResponse: (callback) =>
-    return (err, res, body) =>
-      mi = 0
-      iter = (err, res, body) =>
-        if mi < @middlewares.length
-          next = @middlewares[mi++]
-          try
-            next(err, res, body, iter)
-          catch err
-            return callback(err)
-        else
-          return callback(err) if err
-          # TODO: More detailed HTTP error message
-          return callback(new HttpError('Error ' + res.statusCode, res.statusCode)) if Math.floor(res.statusCode/100) is 5
-          if typeof body is 'string'
-            try
-              body = JSON.parse(body || '{}')
-            catch err
-              return callback(err)
-          return callback(new HttpError(body.message, res.statusCode)) if body.message and res.statusCode is 422
-          return callback(new HttpError(body.message, res.statusCode)) if body.message and res.statusCode in [400, 401, 404]
-          callback null, res.statusCode, body, res.headers
-      iter(err, res, body)
+  errorHandle: (res, body, callback) ->
+    # TODO: More detailed HTTP error message
+    return callback(new HttpError('Error ' + res.statusCode, res.statusCode)) if Math.floor(res.statusCode/100) is 5
+    try
+      body = JSON.parse(body || '{}')
+    catch err
+      return callback(err)
+    return callback(new HttpError(body.message, res.statusCode)) if body.message and res.statusCode is 422
+    return callback(new HttpError(body.message, res.statusCode)) if body.message and res.statusCode in [400, 401, 404]
+    callback null, res.statusCode, body, res.headers
 
   # Github api GET request
   get: (path, params..., callback) ->
@@ -115,7 +102,9 @@ class Client
       method: 'GET'
       headers:
         'User-Agent': 'octonode/0.3 (https://github.com/pksunkara/octonode) terminal/0.0'
-    , @handleResponse(callback)
+    , (err, res, body) =>
+      return callback(err) if err
+      @errorHandle res, body, callback
 
   # Github api GET request
   getNoFollow: (path, params..., callback) ->
@@ -136,8 +125,9 @@ class Client
       headers:
         'Content-Type': 'application/json'
         'User-Agent': 'octonode/0.3 (https://github.com/pksunkara/octonode) terminal/0.0'
-    , @handleResponse(callback)
-
+    , (err, res, body) =>
+      return callback(err) if err
+      @errorHandle res, body, callback
 
   # Github api PUT request
   put: (path, content, callback) ->
@@ -148,7 +138,9 @@ class Client
       headers:
         'Content-Type': 'application/json'
         'User-Agent': 'octonode/0.3 (https://github.com/pksunkara/octonode) terminal/0.0'
-    , @handleResponse(callback)
+    , (err, res, body) =>
+      return callback(err) if err
+      @errorHandle res, body, callback
 
   # Github api DELETE request
   del: (path, content, callback) ->
@@ -159,7 +151,9 @@ class Client
       headers:
         'Content-Type': 'application/json'
         'User-Agent': 'octonode/0.3 (https://github.com/pksunkara/octonode) terminal/0.0'
-    , @handleResponse(callback)
+    , (err, res, body) =>
+      return callback(err) if err
+      @errorHandle res, body, callback
 
   limit: (callback) =>
     @get '/rate_limit', (err, s, b) ->
