@@ -1,12 +1,11 @@
 {
-  "name": "octonode",
+  "name": "troupe-octonode",
   "version": "0.3.9",
-  "author": "Pavan Kumar Sunkara <pavan.sss1991@gmail.com> (http://pksunkara.github.com)",
-  "description": "nodejs wrapper for github v3 api",
+  "description": "last minute hack, this is very temporary",
   "main": "./lib/octonode",
   "repository": {
     "type": "git",
-    "url": "git://github.com/pksunkara/octonode.git"
+    "url": "git://github.com/troupe/octonode.git"
   },
   "keywords": [
     "wrapper",
@@ -14,24 +13,9 @@
     "v3",
     "github"
   ],
-  "homepage": "http://pksunkara.github.com/octonode",
   "scripts": {
     "test": "./node_modules/.bin/vows --spec $(find test -name '*.js')"
   },
-  "contributors": [
-    {
-      "name": "Pavan Kumar Sunkara",
-      "email": "pavan.sss1991@gmail.com"
-    },
-    {
-      "name": "Martin Wawrusch",
-      "email": "martin@wawrusch.com"
-    },
-    {
-      "name": "Joe Frambach",
-      "email": "joe.frambach@showclix.com"
-    }
-  ],
   "dependencies": {
     "request": "2.27.x",
     "randomstring": "1.x.x"
@@ -44,13 +28,10 @@
   "engines": {
     "node": ">0.4.11"
   },
-  "bugs": {
-    "url": "https://github.com/pksunkara/octonode/issues"
-  },
   "licenses": [
     {
       "type": "MIT",
-      "url": "http://github.com/pksunkara/octonode/raw/master/LICENSE"
+      "url": "http://github.com/troupe/octonode/raw/master/LICENSE"
     }
   ]
 }
