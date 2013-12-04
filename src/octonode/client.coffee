@@ -26,7 +26,7 @@ class HttpError extends Error
 # Initiate class
 class Client
 
-  constructor: (@token) ->
+  constructor: (@token, @requestFunc = request) ->
 
   # Get authenticated user instance for client
   me: ->
@@ -97,7 +97,7 @@ class Client
 
   # Github api GET request
   get: (path, params..., callback) ->
-    request
+    @requestFunc
       uri: @buildUrl path, params...
       method: 'GET'
       headers:
@@ -108,7 +108,7 @@ class Client
 
   # Github api GET request
   getNoFollow: (path, params..., callback) ->
-    request
+    @requestFunc
       uri: @buildUrl path, params...
       method: 'GET'
       followRedirect: false
@@ -120,7 +120,7 @@ class Client
 
   # Github api POST request
   post: (path, content, callback) ->
-    request
+    @requestFunc
       uri: @buildUrl path
       method: 'POST'
       body: JSON.stringify content
@@ -133,7 +133,7 @@ class Client
 
   # Github api PUT request
   put: (path, content, callback) ->
-    request
+    @requestFunc
       uri: @buildUrl path
       method: 'PUT'
       body: JSON.stringify content
@@ -146,7 +146,7 @@ class Client
 
   # Github api DELETE request
   del: (path, content, callback) ->
-    request
+    @requestFunc
       uri: @buildUrl path
       method: 'DELETE'
       body: JSON.stringify content
