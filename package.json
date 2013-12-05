@@ -1,6 +1,6 @@
 {
   "name": "troupe-octonode",
-  "version": "0.3.10",
+  "version": "0.3.11",
   "description": "last minute hack, this is very temporary",
   "main": "./lib/octonode",
   "repository": {
